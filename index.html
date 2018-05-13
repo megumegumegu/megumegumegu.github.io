@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Priconne Money Wasting Sim</title>
+        <meta name="description" content="An interactive getting started guide for Brackets.">
+        <link rel="stylesheet" href="main.css">
+        
+        <script>
+                var money = 0;
+                var o = 0;
+                var t = 0;
+                var h = 0;
+                var ones = ["Hiyori","Rei","Misogi","Kurumi","Yori","Suzume",
+                            "Yukari","Aoi","Misaki","Rima"];
+
+                var twos = ["Akari","Miyako","Yuki","Suzuna","Kaori","Mimi","Ayane",
+                            "Eriko","Shinobu","Chika","Kuuka","Tamaki","Mifuyu","Mitsuki","Rin"];
+                
+                var threes = ["Anna","Maho","Rino","Hatsune","Io","Saren","Nozomi","Ninon","Akino",
+                              "Makoto","Shizuru","Monika","Djeeta","Jun","Arisa","Kyouka"];
+                        
+
+            function solo() {
+                
+                
+                var x = 0;
+                var y = 0;
+                var f = Math.random();
+                var chr = "You shouldn't see this fuee";
+                
+                
+                if(f < 0.8) {
+                    x = 1;
+                    o += 1;
+                    y = Math.floor(Math.random()*ones.length);
+                    chr = ones[y];
+                    
+                } else if(f < 0.98) {
+                    x = 2;
+                    t += 1;
+                    y = Math.floor(Math.random()*twos.length);
+                    chr = twos[y];
+                } else {
+                    x = 3;
+                    h += 1;
+                    y = Math.floor(Math.random()*threes.length);
+                    chr = threes[y];
+                }
+                var s = "";
+                if(x==1)
+                    s = "☆";
+                else if(x==2)
+                    s = "☆☆";
+                else
+                    s = "☆☆☆";
+                tot = o+t+h;    
+                document.getElementById("scout").innerHTML = "Scouted member: "+s+" "+chr;
+                document.getElementById("total").innerHTML = "☆: "+o+"<br>☆☆: "+t+"<br>☆☆☆: "+h+"<br>Total scouts: "+tot;
+                add(2.5);
+            }
+            
+            function ten() {
+                var scoottext = "Scouted members: <br>";
+                var i;
+                for(i = 0; i < 10; i++) {
+                    var x = 0;
+                    var y = 0;
+                    var f = Math.random();
+                    var chr = "You shouldn't see this fuee";
+
+
+                    if(f < 0.8 && i < 9) {
+                        x = 1;
+                        o += 1;
+                        y = Math.floor(Math.random()*ones.length);
+                        chr = ones[y];
+
+                    } else if(f < 0.98) {
+                        x = 2;
+                        t += 1;
+                        y = Math.floor(Math.random()*twos.length);
+                        chr = twos[y];
+                    } else {
+                        x = 3;
+                        h += 1;
+                        y = Math.floor(Math.random()*threes.length);
+                        chr = threes[y];
+                    }
+                    var s = "";
+                    if(x==1)
+                        s = "☆";
+                    else if(x==2)
+                        s = "☆☆";
+                    else
+                        s = "☆☆☆";
+                    scoottext += s + " " + chr;
+                    if(i < 9)
+                        scoottext += "<br>";
+                }
+                tot = o+t+h;
+                document.getElementById("scout").innerHTML = scoottext;
+                document.getElementById("total").innerHTML = "☆: "+o+"<br>☆☆: "+t+"<br>☆☆☆: "+h+"<br>Total scouts: "+tot;
+                add(25);
+            }
+            
+            function add(n) {
+                money += n;
+                document.getElementById("money").innerHTML = "Money wasted: $" + money;
+            }
+            
+        </script>
+    </head>
+    <body>
+        
+        <h1>Princess Connect Money Wasting Simulator</h1>
+        
+        <p id="money">
+            Money wasted: $0
+         </p>
+        
+        <div class="container">
+            <input type="image" onclick=solo() src="img/button/soloyolo.png" />
+            <input type="image" onclick=ten() src="img/button/tenroll.png" />
+        </div>
+        
+        <p id="scout">
+            Scout results go here.
+        </p>
+        <p id="total">
+            ☆: 0<br>
+            ☆☆: 0<br>
+            ☆☆☆: 0<br>
+            Total scouts: 0
+        </p>
+    </body>
+</html>
