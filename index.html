@@ -5,24 +5,83 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Priconne Money Wasting Sim</title>
-        <meta name="description" content="Spend all your money on 3 stars without actually spending money. version 0.1">
+        <meta name="description" content="v0.2">
         <link rel="stylesheet" href="main.css">
         
         <script>
-                var money = 0;
-                var o = 0;
-                var t = 0;
-                var h = 0;
-                var ones = ["Hiyori","Rei","Misogi","Kurumi","Yori","Suzume",
-                            "Yukari","Aoi","Misaki","Rima"];
+            
+            /* I APOLOGIZE FOR HOW HORRIBLY HACKY THIS CODE IS
+            I'VE NEVER USED JAVASCRIPT BEFORE */
+            
+            var money = 0;
+            var o = 0;
+            var t = 0;
+            var h = 0;
 
-                var twos = ["Akari","Miyako","Yuki","Suzuna","Kaori","Mimi","Ayane",
-                            "Eriko","Shinobu","Chika","Kuuka","Tamaki","Mifuyu","Mitsuki","Rin"];
-                
-                var threes = ["Anna","Maho","Rino","Hatsune","Io","Saren","Nozomi","Ninon","Akino",
-                              "Makoto","Shizuru","Monika","Djeeta","Jun","Arisa","Kyouka"];
+
+            if(localStorage.getItem("Money") !== null)
+                money = Number(localStorage.getItem("Money"));
+            if(localStorage.getItem("Ones") !== null)
+                o = Number(localStorage.getItem("Ones"));
+            if(localStorage.getItem("Twos") !== null)
+                t = Number(localStorage.getItem("Twos"));
+            if(localStorage.getItem("Threes") !== null)
+                h = Number(localStorage.getItem("Threes"));
+
+
+            var ones = ["Hiyori","Rei","Misogi","Kurumi","Yori","Suzume",
+                        "Yukari","Aoi","Misaki","Rima"];
+            var oh = new Array(ones.length).fill(0);
+
+            var twos = ["Akari","Miyako","Yuki","Suzuna","Kaori","Mimi","Ayane",
+                        "Eriko","Shinobu","Chika","Kuuka","Tamaki","Mifuyu","Mitsuki","Rin"];
+            var th = new Array(twos.length).fill(0);
+
+            var threes = ["Anna","Maho","Rino","Hatsune","Io","Saren","Nozomi","Ninon","Akino",
+                          "Makoto","Shizuru","Monika","Djeeta","Jun","Arisa","Kyouka"];
+            var hh = new Array(threes.length).fill(0);
+            
+            /*if(localStorage.getItem("Oh0") !== null) {
+                var i;
+                for (i = 0; i < oh.length; i++){
+                    oh[i] = Number(localStorage.getItem("Oh"+i));
+                }
+            }
+            if(localStorage.getItem("Th0") !== null) {
+                var i;
+                for (i = 0; i < th.length; i++){
+                    th[i] = Number(localStorage.getItem("Th"+i));
+                }
+            }
+            if(localStorage.getItem("Hh0") !== null) {
+                var i;
+                for (i = 0; i < hh.length; i++){
+                    hh[i] = Number(localStorage.getItem("Hh"+i));
+                }
+            }*/
+            if(localStorage.getItem("oh") !== null)
+                oh = JSON.parse(localStorage.getItem("oh"));
+            if(localStorage.getItem("th") !== null)
+                th = JSON.parse(localStorage.getItem("th"));
+            if(localStorage.getItem("hh") !== null)
+                hh = JSON.parse(localStorage.getItem("hh"));
+            
                         
-
+            function load() {
+                document.getElementById("money").innerHTML = "Money wasted: $" + money;
+                tot = o+t+h;  
+                document.getElementById("total").innerHTML = "☆: "+o+"<br>☆☆: "+t+"<br>☆☆☆: "+h+"<br>Total scouts: "+tot; 
+                autosave();
+                createtable();
+            }
+            
+            function autosave() {
+                setTimeout(function () {
+                    save();
+                    autosave();
+                },1000);
+            }
+            
             function solo() {
                 
                 
@@ -37,17 +96,20 @@
                     o += 1;
                     y = Math.floor(Math.random()*ones.length);
                     chr = ones[y];
+                    oh[y]+=1;
                     
                 } else if(f < 0.98) {
                     x = 2;
                     t += 1;
                     y = Math.floor(Math.random()*twos.length);
                     chr = twos[y];
+                    th[y]+=1;
                 } else {
                     x = 3;
                     h += 1;
                     y = Math.floor(Math.random()*threes.length);
                     chr = threes[y];
+                    hh[y]+=1;
                 }
                 var s = "";
                 if(x==1)
@@ -60,6 +122,7 @@
                 document.getElementById("scout").innerHTML = "Scouted member: "+s+" "+chr;
                 document.getElementById("total").innerHTML = "☆: "+o+"<br>☆☆: "+t+"<br>☆☆☆: "+h+"<br>Total scouts: "+tot;
                 add(2.5);
+                updatetable();
             }
             
             function ten() {
@@ -77,17 +140,19 @@
                         o += 1;
                         y = Math.floor(Math.random()*ones.length);
                         chr = ones[y];
-
+                        oh[y]+=1;
                     } else if(f < 0.98) {
                         x = 2;
                         t += 1;
                         y = Math.floor(Math.random()*twos.length);
                         chr = twos[y];
+                        th[y]+=1;
                     } else {
                         x = 3;
                         h += 1;
                         y = Math.floor(Math.random()*threes.length);
                         chr = threes[y];
+                        hh[y]+=1;
                     }
                     var s = "";
                     if(x==1)
@@ -104,6 +169,48 @@
                 document.getElementById("scout").innerHTML = scoottext;
                 document.getElementById("total").innerHTML = "☆: "+o+"<br>☆☆: "+t+"<br>☆☆☆: "+h+"<br>Total scouts: "+tot;
                 add(25);
+                updatetable();
+            }
+            
+            function createtable() {
+                var table = document.getElementById("tb");
+                var i;
+                var l;
+                if (ones.length < twos.length) {
+                    if(twos.length < threes.length) {
+                        l = threes.length;
+                    } else
+                        l = twos.length;
+                } else
+                    l = ones.length;
+                for (i = 0; i < l; i++) {
+                    var row = table.insertRow(i);
+                    var c1 = row.insertCell(0);
+                    var c2 = row.insertCell(1);    
+                    var c3 = row.insertCell(2);
+                    var c4 = row.insertCell(3);   
+                    var c5 = row.insertCell(4);
+                    var c6 = row.insertCell(5); 
+                    if(i < ones.length) {
+                        c1.innerHTML = ones[i];
+                        c2.innerHTML = oh[i];
+                    }
+                    if(i < twos.length) {
+                        c3.innerHTML = twos[i];
+                        c4.innerHTML = th[i];
+                    }
+                    if(i < threes.length) {
+                        c5.innerHTML = threes[i];
+                        c6.innerHTML = hh[i];
+                    }                   
+                }        
+            }
+            
+            function updatetable() {
+                var table = document.getElementById("tb");
+                while (table.rows.length > 0)
+                    table.deleteRow(0);
+                createtable();
             }
             
             function add(n) {
@@ -111,29 +218,53 @@
                 document.getElementById("money").innerHTML = "Money wasted: $" + money;
             }
             
+            function save() {
+                localStorage.setItem("Money",money);
+                localStorage.setItem("Ones",o);
+                localStorage.setItem("Twos",t);
+                localStorage.setItem("Threes",h);
+                localStorage.setItem("oh",JSON.stringify(oh));
+                localStorage.setItem("th",JSON.stringify(th));
+                localStorage.setItem("hh",JSON.stringify(hh));
+                
+            }
+
+            function clear() {
+                localStorage.clear();
+            }
         </script>
     </head>
-    <body>
+    <body onload="load()">
         
         <h1>Princess Connect Money Wasting Simulator</h1>
-        
-        <p id="money">
-            Money wasted: $0
-         </p>
-        
+        <!--        
         <div class="container">
             <input type="image" onclick=solo() src="img/button/soloyolo.png" />
             <input type="image" onclick=ten() src="img/button/tenroll.png" />
         </div>
-        
-        <p id="scout">
-            Scout results go here.
-        </p>
-        <p id="total">
-            ☆: 0<br>
-            ☆☆: 0<br>
-            ☆☆☆: 0<br>
-            Total scouts: 0
-        </p>
+        -->
+        <div class="row">
+            <div class="column">
+                <div class="owo">
+                    <button onclick="solo()">Solo</button>
+                    <button onclick="ten()">Ten</button>
+                </div>
+                <p id="scout">
+                    Scout results go here.
+                </p>
+                <p id="total">
+                    GUESS WHO IS BEAUTIFUL?
+                </p>
+
+                <p id="money">
+                    THE GIRL READING THIS (or in other words: enable javascript, please)
+                </p>
+            </div>
+            <div class="column">
+                <table id="tb" class="woof">
+                </table>
+                <p class="smol">Results autosave every second.</p>
+            </div>
+        </div>
     </body>
 </html>
