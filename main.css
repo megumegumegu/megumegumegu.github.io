@@ -79,3 +79,29 @@ owo {
     margin: auto;
     display: block;
 }
+
+.woof {
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-family:"lucida grande", tahoma, verdana, arial, "hiragino kaku gothic pro",meiryo,"ms pgothic",sans-serif;
+}
+
+tr {
+    border-bottom: 1px solid black;
+}
+
+.smol {
+    font-size: 10px;
+}
+
+.column {
+    float: left;
+    width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
