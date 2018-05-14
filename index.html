@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Priconne Money Wasting Sim</title>
-        <meta name="description" content="v0.2">
+        <meta name="description" content="v0.2.1 Clear Test">
         <link rel="stylesheet" href="main.css">
         
         <script>
@@ -40,33 +40,14 @@
             var threes = ["Anna","Maho","Rino","Hatsune","Io","Saren","Nozomi","Ninon","Akino",
                           "Makoto","Shizuru","Monika","Djeeta","Jun","Arisa","Kyouka"];
             var hh = new Array(threes.length).fill(0);
-            
-            /*if(localStorage.getItem("Oh0") !== null) {
-                var i;
-                for (i = 0; i < oh.length; i++){
-                    oh[i] = Number(localStorage.getItem("Oh"+i));
-                }
-            }
-            if(localStorage.getItem("Th0") !== null) {
-                var i;
-                for (i = 0; i < th.length; i++){
-                    th[i] = Number(localStorage.getItem("Th"+i));
-                }
-            }
-            if(localStorage.getItem("Hh0") !== null) {
-                var i;
-                for (i = 0; i < hh.length; i++){
-                    hh[i] = Number(localStorage.getItem("Hh"+i));
-                }
-            }*/
+
             if(localStorage.getItem("oh") !== null)
                 oh = JSON.parse(localStorage.getItem("oh"));
             if(localStorage.getItem("th") !== null)
                 th = JSON.parse(localStorage.getItem("th"));
             if(localStorage.getItem("hh") !== null)
                 hh = JSON.parse(localStorage.getItem("hh"));
-            
-                        
+                                  
             function load() {
                 document.getElementById("money").innerHTML = "Money wasted: $" + money;
                 tot = o+t+h;  
@@ -218,6 +199,29 @@
                 document.getElementById("money").innerHTML = "Money wasted: $" + money;
             }
             
+            function clr() {
+                var answer = confirm("Clear data?")
+                if(answer) {
+
+                    oh.fill(0);
+                    th.fill(0);
+                    hh.fill(0);
+                    money = 0;
+                    o = 0;
+                    t = 0;
+                    h = 0;
+                    
+                    updatetable();
+                    document.getElementById("money").innerHTML = "Money wasted: $" + money;
+                    tot = o+t+h;
+                    document.getElementById("scout").innerHTML = "Scout results go here.";
+                    document.getElementById("total").innerHTML = "☆: "+o+"<br>☆☆: "+t+"<br>☆☆☆: "+h+"<br>Total scouts: "+tot; 
+                    window.localStorage.clear();
+                    
+                }
+                else {}
+            }
+            
             function save() {
                 localStorage.setItem("Money",money);
                 localStorage.setItem("Ones",o);
@@ -225,13 +229,10 @@
                 localStorage.setItem("Threes",h);
                 localStorage.setItem("oh",JSON.stringify(oh));
                 localStorage.setItem("th",JSON.stringify(th));
-                localStorage.setItem("hh",JSON.stringify(hh));
-                
+                localStorage.setItem("hh",JSON.stringify(hh));    
             }
 
-            function clear() {
-                localStorage.clear();
-            }
+
         </script>
     </head>
     <body onload="load()">
@@ -264,6 +265,9 @@
                 <table id="tb" class="woof">
                 </table>
                 <p class="smol">Results autosave every second.</p>
+                <div class="owo">
+                    <button onclick="clr()">Clear Data</button>
+                </div>
             </div>
         </div>
     </body>
